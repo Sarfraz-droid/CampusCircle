@@ -25,7 +25,7 @@ let theme = createTheme({
     values: {
       mobile: 0,
       tablet: 640,
-      laptop: 1024,
+      laptop: 1224,
       desktop: 1200,
     }
   }

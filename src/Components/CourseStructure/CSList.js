@@ -36,8 +36,10 @@ const useStyles = makeStyles((theme) => ({
   heading: {
     ...theme.typography.heading,
         paddingBottom: 20,
-      fontSize : theme.breakpoints.down("laptop") ? "1.2rem" : "1.5rem",
-      textAlign: theme.breakpoints.down("laptop") ? "center" : "auto",
+      [theme.breakpoints.down("laptop")]: {
+        textAlign: "center",
+        fontSize: "1.2rem"
+      },
       borderBottom: "1px solid #e0e0e0",
   },
   Subheading: {
