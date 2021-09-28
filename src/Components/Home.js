@@ -38,7 +38,7 @@ function Home() {
                     <Paper sx={{
                         backgroundColor: "secondary.main",
                         padding: 3,
-                        width: "30%",
+                        width: "60%",
                     }} elevation={4}>
                         <Grid container direction="column" justify="center" alignItems="center" spacing={2}>
                             <Grid item>
