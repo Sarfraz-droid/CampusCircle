@@ -68,6 +68,11 @@ const useStyles = makeStyles((theme) => ({
   },
   grid: {
     padding: theme.breakpoints.down('laptop') ? 10 : 'auto',
+    marginLeft: 70,
+    [theme.breakpoints.down("laptop")] : {
+      marginLeft: 0,
+      
+    }
     
   }
 }));
