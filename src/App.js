@@ -11,15 +11,20 @@ import Stack from "@mui/material/Stack";
 import CSList from "./Components/CourseStructure/CSList";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import ComingSoon from "./Components/ComingSoon"
-import { useMediaQuery } from 'react-responsive'
 
+
+import ComingSoon from "./Components/ComingSoon"
+import NewEvent from "./Components/Events/NewEvent"
+import Events from "./Components/Events/Events"
+
+import { useMediaQuery } from 'react-responsive'
+import Home from "./Components/Home"
 
 export default function App() {
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
   return (
     <ThemeProvider theme={theme}>
-      <Stack direction={isTabletOrMobile ? 'column' : 'row'} spacing={isTabletOrMobile? 0 : 10}>
+      <Stack direction={isTabletOrMobile ? 'column' : 'row'} spacing={isTabletOrMobile? 0 : 0}>
         <BrowserRouter>
 
           {isTabletOrMobile ? <Mobile/> :<Desktop />}
@@ -45,7 +50,13 @@ export default function App() {
               <ComingSoon />
             </Route>
             <Route path="/events">
-              <ComingSoon />
+              <Events isTabletOrMobile={isTabletOrMobile}/>
+            </Route>
+            <Route path="/new-events">
+              <NewEvent />
+            </Route>
+            <Route path="/">
+              <Home />
             </Route>
           </Switch>
         </BrowserRouter>

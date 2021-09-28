@@ -87,26 +87,31 @@ function Mobile() {
                     
                       <ListItemButton onClick={() => {
                           History.push('/course/CSE')
+                          setDraw({ state: !draw.state })
                       }}>
                         <ListItemText primary="CSE" />
                       </ListItemButton>
                       <ListItemButton onClick={() => {
                           History.push('/course/ECE')
+                          setDraw({ state: !draw.state })
                       }}>
                         <ListItemText primary="ECE" />
                       </ListItemButton>
                       <ListItemButton onClick={() => {
                           History.push('/course/EE')
+                          setDraw({ state: !draw.state })
                       }}>
                         <ListItemText primary="Electrical" />
                       </ListItemButton>
                       <ListItemButton onClick={() => {
                           History.push('/course/MECH')
+                          setDraw({ state: !draw.state })
                       }}>
                         <ListItemText primary="Mrchanical" />
                       </ListItemButton>
                       <ListItemButton onClick={() => {
                           History.push('/course/CIVIL')
+                          setDraw({ state: !draw.state })
                       }}>
                         <ListItemText primary="Civil" />
                       </ListItemButton>
@@ -121,6 +126,7 @@ function Mobile() {
             <ListItem disablePadding>
               <ListItemButton component="a" onClick={() => {
                   History.push('/internships')
+                  setDraw({ state: !draw.state })
               }}>
                 <ListItemText sx={{
                   color: 'primary.main'
@@ -131,6 +137,7 @@ function Mobile() {
             <ListItem disablePadding>
               <ListItemButton component="a" onClick={() => {
                   History.push('/placements')
+                  setDraw({ state: !draw.state })
               }}>
                 <ListItemText
                 sx={{
@@ -142,6 +149,7 @@ function Mobile() {
             <ListItem disablePadding>
               <ListItemButton component="a" onClick={() => {
                   History.push('/events')
+                  setDraw({ state: !draw.state })
               }}>
                 <ListItemText
                 sx={{
