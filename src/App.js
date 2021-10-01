@@ -16,6 +16,7 @@ import Box from "@mui/material/Box";
 import ComingSoon from "./Components/ComingSoon"
 import NewEvent from "./Components/Events/NewEvent"
 import Events from "./Components/Events/Events"
+import SingleEvent from "./Components/Events/SingleEvent"
 
 import { useMediaQuery } from 'react-responsive'
 import Home from "./Components/Home"
@@ -35,7 +36,7 @@ export default function App() {
             }}
           /> : <Box
             sx={{
-              width: 300,
+              width: 372,
               height: "100vh",
             }}
           />}
@@ -49,14 +50,18 @@ export default function App() {
             <Route path="/placements">
               <ComingSoon />
             </Route>
+            <Route path="/events/:id">
+              <SingleEvent isTabletOrMobile={isTabletOrMobile}/>
+            </Route>
             <Route path="/events">
               <Events isTabletOrMobile={isTabletOrMobile}/>
             </Route>
             <Route path="/new-events">
               <NewEvent />
             </Route>
+
             <Route path="/">
-              <Home />
+              <Home isTabletOrMobile={isTabletOrMobile}/>
             </Route>
           </Switch>
         </BrowserRouter>

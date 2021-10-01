@@ -19,6 +19,13 @@ let theme = createTheme({
       marginTop: "1rem",
       fontWeight: 600,
       color: '#118D47'
+    },
+    eventDescription:{
+      fontFamily: "Montserrat",
+      fontSize: "1rem",
+      fontWeight: 400,
+      
+
     }
   },
   breakpoints: {
