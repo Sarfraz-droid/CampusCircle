@@ -34,7 +34,7 @@ var transporter = nodemailer.createTransport({
 
 app.get("/send-mail", async function (req, res) {
   console.log(req.body);
-  sendMail("message test","subject")
+  sendMail("message test", "subject");
   res.send("message sent");
 });
 
@@ -49,7 +49,7 @@ async function sendMail(body, Subject) {
   });
   const mailOptions = {
     from: "campuscircle6@gmail.com", // sender address
-    bcc : mails, // list of receivers
+    bcc: mails, // list of receivers
     subject: `${Subject}`, // Subject line
     html: `${body}`, // plain text body
   };
@@ -61,17 +61,47 @@ async function sendMail(body, Subject) {
       console.log(info);
     }
   });
-
 }
 
 app.post("/society-registeration", async (req, res) => {
-  const registerationMsg = `<h2 class="code-line" data-line-start=0 data-line-end=1 ><a id="Welcome_to_Campus_Circle_0"></a>Welcome to Campus Circle</h2>
-  <p class="has-line-data" data-line-start="2" data-line-end="4">Your Registration key for Campus Circle is <strong>1234</strong><br>
-  Please DM us on <a href="link">here</a> and get your Society Key to get registered.</p>`;
-
   const society = req.body;
-  const addData = await db.collection("Form").doc(society.name).set(society);
-  res.send(society);
+  const addData = await db
+    .collection("Form")
+    .doc(society.SocietyName)
+    .set(society)
+    .catch((err) => {
+      console.log(err);
+      res.send({
+        status: 400,
+        message: "Error in adding data",
+      });
+    });
+
+  MaileSending(
+    {
+      Email: "alamsarfraz422@gmail.com",
+      subject: "CAMPUS CIRCLE REGISTRATION",
+    },
+    `${society.SocietyName} Society Has Registered a FORM`
+  );
+
+  //THANK YOU NOTE
+  const msg = `<h2 class="code-line" data-line-start=0 data-line-end=1 ><a id="Thank_you_for_Registering_on_CampusCircle_0"></a>Thank you for Registering on CampusCircle!</h2>
+  <p class="has-line-data" data-line-start="2" data-line-end="3"><img src="https://media.giphy.com/media/m6OomwWCojfS8/giphy.gif" alt=""></p>
+  <p class="has-line-data" data-line-start="4" data-line-end="5">We will verify and provide the verification mail soon. Thanks for joining CampusCircle.</p>`;
+
+  MaileSending(
+    {
+      Email: society.email,
+      subject: "Thank you for Registering on CampusCircle",
+    },
+    msg
+  );
+
+  res.send({
+    status: 200,
+    message: "Society Registered",
+  });
 });
 
 app.post("/verify-society", async (req, res) => {
@@ -104,7 +134,7 @@ app.post("/verify-society", async (req, res) => {
       upperCase: false,
       specialChars: false,
       alphabets: false,
-      digits: true
+      digits: true,
     });
 
     const msg = `<h3 class="code-line" data-line-start=0 data-line-end=1 ><a id="Your_OTP_for_the_Event_is_1234__This_OTP_will_expire_in_15_min_0"></a>Your OTP for the Event is <strong>    
@@ -113,13 +143,13 @@ app.post("/verify-society", async (req, res) => {
     console.log(Sendmail);
     const accessToken = generateAccessToken(msgOTP);
 
-    MaileSending({ Email: Sendmail }, msg);
+    MaileSending({ Email: Sendmail, subject: "Event Confirmation" }, msg);
 
-      res.send({
-        status: true,
-        message: "OTP has been sent successfully",
-        accessToken: accessToken,
-      });
+    res.send({
+      status: true,
+      message: "OTP has been sent successfully",
+      accessToken: accessToken,
+    });
   }
 });
 
@@ -213,16 +243,14 @@ async function MaileSending(info, data) {
   const mailOptions = {
     from: "campuscircle6@gmail.com", // sender address
     to: email, // list of receivers
-    subject: "Campus Circle Society Registration", // Subject line
+    subject: info.subject, // Subject line
     html: data,
   };
   transporter.sendMail(mailOptions, function (err, info) {
     if (err) {
       console.log(err);
-
     } else {
       console.log(info);
     }
   });
-
 }
