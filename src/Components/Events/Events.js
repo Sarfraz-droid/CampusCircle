@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {useHistory} from "react-router-dom";
+import {useHistory,Link} from "react-router-dom";
 import {
   Grid,
   Typography,
@@ -157,7 +157,7 @@ function Events(props) {
     <Grid container direction="column" alignItems="center" spacing={5}>
       <Grid item className={classes.headinggrid}>
         <Typography variant="heading" className={classes.heading}>
-          Societies can fill <a href="#">here</a> this form to
+          Societies can fill <Link to="/event-register">here</Link> this form to
           get registered with CampusCircle
         </Typography>
       </Grid>

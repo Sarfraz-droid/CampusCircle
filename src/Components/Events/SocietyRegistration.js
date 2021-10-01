@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import "react-quill/dist/quill.snow.css"; // ES6
-import ReactQuill from "react-quill"; // ES6
 import "../../css/style.css";
 import { useHistory } from "react-router-dom";
+import Webcam from "react-webcam";
+
 
 import {
+  Box,
   Grid,
   Typography,
   TextField,
@@ -16,7 +18,7 @@ import {
 import Button from "@mui/material/Button";
 
 import { makeStyles } from "@mui/styles";
-
+import Cam from "./Registration-Cam/Cam"
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,61 +45,61 @@ function NewEvent() {
   });
 
   const [text, setText] = useState({
+    Yourname: "",
+    YourEmail: "",
+    YourLinkedIn: "",
     SocietyName: "",
     instagramLink: "",
     About: "",
-    email: ""
+    email: "",
   });
+
+  const [webcam, setWebcam] = useState({
+    image: null,
+    state: false,
+  })
+
   function handleChange(value) {
     setText({ ...text, body: value });
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    setOpen({ ...Open, loading: true, state: true });
-    axios({
-        method: "post",
-        url: "https://campus-circle.herokuapp.com/society-registeration",
-        data: {
-            name: text.SocietyName,
-            insta: text.instagramLink,
-            About: text.About,
-            Email: text.email
-        }
-
-      })
-      .then((res) => {
-        console.log(res);
-        if (res.data.status === false) {
-          setOpen({
-            state: true,
-            error: true,
-            loading: false,
-          });
-        } else {
-          setOpen({
-            state: true,
-            error: false,
-            loading: false,
-          });
-        }
-      });
   }
 
-  async function handleClose() {
-    if(Open.loading === true)
-      return;    
-    if (Open.error === false) 
-      history.push("/registration/successful");
-    else
-    history.push("/registration/successful");
+  function Photo() {
+    return (
+      <Stack direction="row" spacing={2}>
+        <img src={webcam.image} />
+        <Button color="secondary" sx={{
+          width: "100%",
 
-    setOpen({
-      ...Open,
-      state: false 
-    });
+        }} onClick={() => {
+          setWebcam({ ...webcam, image: null })
+        }}>
+          Retake
+        </Button>
+      </Stack>
+    )
   }
 
+  function handleChangeText(e) {
+    return (
+      <Box
+      sx={{
+        width: "100%",
+        height: 400,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Button color="secondary" onClick={() => setWebcam({...webcam,state: true})}>
+        Take Your Photo
+      </Button>
+    </Box>
+    )
+  }
 
   return (
     <Grid
@@ -108,7 +110,43 @@ function NewEvent() {
       spacing={2}
     >
       <Grid item>
-        <Typography variant="heading">New Event (use Society Code : pGlShZF7)</Typography>
+        <Typography variant="heading">Register Your Society</Typography>
+      </Grid>
+      <Grid item>
+        <Typography variant="subtitle1">Your Information</Typography>
+      </Grid>
+      <Grid item className={classes.grid}>
+        <TextField
+          label="Your Name"
+          color="secondary"
+          variant="standard"
+          value={text.Yourname}
+          onChange={(e) => setText({ ...text, Yourname: e.target.value })}
+          fullWidth
+        />
+      </Grid>
+      <Grid item className={classes.grid}>
+        <TextField
+          label="Your Email"
+          color="secondary"
+          variant="standard"
+          value={text.YourEmail}
+          onChange={(e) => setText({ ...text, YourEmail: e.target.value })}
+          fullWidth
+        />
+      </Grid>
+      <Grid item className={classes.grid}>
+        <TextField
+          label="Your LinkedIn Profile"
+          variant="standard"
+          color="secondary"
+          value={text.YourLinkedIn}
+          onChange={(e) => setText({ ...text, YourLinkedIn: e.target.value })}
+          fullWidth
+        />
+      </Grid>
+      <Grid item>
+        <Typography variant="subtitle1">Society Information</Typography>
       </Grid>
       <Grid item className={classes.grid}>
         <TextField
@@ -154,19 +192,20 @@ function NewEvent() {
           fullWidth
         />
       </Grid>
+      <Grid item className={classes.grid}>
+        {webcam.image==null ? webcam.state ? <Cam webcam={webcam} setWebcam={setWebcam}/> : handleChangeText() : Photo() }
+        {/* <Webcam
+          audio={false}
+          height={400}
+          screenshotFormat="image/jpeg"
+          width={400}
+        /> */}
+      </Grid>
       <Grid item>
         <Button variant="outlined" color="secondary" onClick={handleSubmit}>
           Submit
         </Button>
       </Grid>
-
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={Open.state}
-        onClick={() => handleClose()}
-      >
-        {Open.loading ? <CircularProgress color="secondary" /> : <ReqSuccess />}
-      </Backdrop>
     </Grid>
   );
 }
