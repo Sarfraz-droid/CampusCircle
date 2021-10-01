@@ -4,7 +4,6 @@ import "../../css/style.css";
 import { useHistory } from "react-router-dom";
 import Webcam from "react-webcam";
 
-
 import {
   Box,
   Grid,
@@ -18,8 +17,13 @@ import {
 import Button from "@mui/material/Button";
 
 import { makeStyles } from "@mui/styles";
-import Cam from "./Registration-Cam/Cam"
+import Cam from "./Registration-Cam/Cam";
 import axios from "axios";
+
+const Dev = process.env.NODE_ENV === "development";
+const Link = Dev
+  ? "http://localhost:8000"
+  : "https://campus-circle.herokuapp.com";
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -30,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
   },
   SubmitePaper: {
     padding: 20,
+  },
+  SubmitButton: {
+    marginBottom: 40,
   },
 }));
 
@@ -46,7 +53,6 @@ function NewEvent() {
 
   const [text, setText] = useState({
     Yourname: "",
-    YourEmail: "",
     YourLinkedIn: "",
     SocietyName: "",
     instagramLink: "",
@@ -57,7 +63,7 @@ function NewEvent() {
   const [webcam, setWebcam] = useState({
     image: null,
     state: false,
-  })
+  });
 
   function handleChange(value) {
     setText({ ...text, body: value });
@@ -65,40 +71,81 @@ function NewEvent() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    
+    const data= {
+      ...text,
+      image: webcam.image,
+    }
+
+    axios({
+      method: 'post',
+      url: `${Link}/society-registeration`,
+      data: data
+    }).then((res) => {
+      console.log(res)
+      if(res.data.status == 200){
+        history.push('/society-registeration/success')
+      }else{
+        history.push('/society-registeration/error')
+      }
+    })
+  }
+
+  function disableButton(){
+    if(webcam.image == null){
+      return true;
+    }
+
+    for(let key in text){
+      if(text[key] == ""){
+        return true;
+      }
+    }
+    return false;
   }
 
   function Photo() {
     return (
       <Stack direction="row" spacing={2}>
         <img src={webcam.image} />
-        <Button color="secondary" sx={{
-          width: "100%",
-
-        }} onClick={() => {
-          setWebcam({ ...webcam, image: null })
-        }}>
+        <Button
+          color="secondary"
+          sx={{
+            width: "100%",
+          }}
+          onClick={() => {
+            setWebcam({
+              image: null,
+              state: true,
+            });
+          }}
+        >
           Retake
         </Button>
       </Stack>
-    )
+    );
   }
 
   function handleChangeText(e) {
     return (
       <Box
-      sx={{
-        width: "100%",
-        height: 400,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Button color="secondary" onClick={() => setWebcam({...webcam,state: true})}>
-        Take Your Photo
-      </Button>
-    </Box>
-    )
+        sx={{
+          width: "100%",
+          height: 400,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Button
+          color="secondary"
+          variant="contained"
+          onClick={() => setWebcam({ ...webcam, state: true })}
+        >
+          Take Your Photo
+        </Button>
+      </Box>
+    );
   }
 
   return (
@@ -110,7 +157,14 @@ function NewEvent() {
       spacing={2}
     >
       <Grid item>
-        <Typography variant="heading">Register Your Society</Typography>
+        <Typography
+          variant="heading"
+          sx={{
+            marginTop: 50,
+          }}
+        >
+          Register Your Society
+        </Typography>
       </Grid>
       <Grid item>
         <Typography variant="subtitle1">Your Information</Typography>
@@ -125,7 +179,7 @@ function NewEvent() {
           fullWidth
         />
       </Grid>
-      <Grid item className={classes.grid}>
+      {/* <Grid item className={classes.grid}>
         <TextField
           label="Your Email"
           color="secondary"
@@ -134,7 +188,7 @@ function NewEvent() {
           onChange={(e) => setText({ ...text, YourEmail: e.target.value })}
           fullWidth
         />
-      </Grid>
+      </Grid> */}
       <Grid item className={classes.grid}>
         <TextField
           label="Your LinkedIn Profile"
@@ -162,7 +216,7 @@ function NewEvent() {
       <Grid item className={classes.grid}>
         <TextField
           id="standard-basic"
-          label="Society Instagram Link"
+          label="Society Social Media Profile"
           variant="standard"
           color="secondary"
           value={text.instagramLink}
@@ -176,7 +230,7 @@ function NewEvent() {
           label="Society Email Account"
           variant="standard"
           color="secondary"
-          value={text.instagramLink}
+          value={text.email}
           onChange={(e) => setText({ ...text, email: e.target.value })}
           fullWidth
         />
@@ -193,16 +247,24 @@ function NewEvent() {
         />
       </Grid>
       <Grid item className={classes.grid}>
-        {webcam.image==null ? webcam.state ? <Cam webcam={webcam} setWebcam={setWebcam}/> : handleChangeText() : Photo() }
-        {/* <Webcam
-          audio={false}
-          height={400}
-          screenshotFormat="image/jpeg"
-          width={400}
-        /> */}
+        {webcam.image == null ? (
+          webcam.state ? (
+            <Cam webcam={webcam} setWebcam={setWebcam} />
+          ) : (
+            handleChangeText()
+          )
+        ) : (
+          Photo()
+        )}
       </Grid>
       <Grid item>
-        <Button variant="outlined" color="secondary" onClick={handleSubmit}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={handleSubmit}
+          className={classes.SubmitButton}
+          disabled={disableButton()}
+        >
           Submit
         </Button>
       </Grid>

@@ -18,6 +18,7 @@ import NewEvent from "./Components/Events/NewEvent"
 import Events from "./Components/Events/Events"
 import SingleEvent from "./Components/Events/SingleEvent"
 import Societyregister from "./Components/Events/SocietyRegistration"
+import RegisterResult from "./Components/Events/SocietyRegistrationReport"
 
 import { useMediaQuery } from 'react-responsive'
 import Home from "./Components/Home"
@@ -63,6 +64,9 @@ export default function App() {
             <Route path="/event-register"> 
               <Societyregister />
             </Route> 
+            <Route path="/society-registeration/:id">
+              <RegisterResult />
+            </Route>
             <Route path="/">
               <Home isTabletOrMobile={isTabletOrMobile}/>
             </Route>
